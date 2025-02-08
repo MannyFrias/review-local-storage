@@ -68,7 +68,9 @@
       let todos = [];
 
       window.onload = function () {
+        // init storedTodos to whatever is in local storage
         const storedTodos = localStorage.getItem("todos");
+        // if there are todos in local storage, parse them and set them to todos
         if (storedTodos) todos = JSON.parse(storedTodos);
         renderTodos();
       };
