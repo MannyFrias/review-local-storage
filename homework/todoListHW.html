@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="input-container">
+        <input type="text" id="todoInput" placeholder="add todo task" />
+        <button id="addTodoButton">+ todo</button>
+      </div>
+      <div>
+        <ul id="todoList"></ul>
+      </div>
+    </div>
+    <script>
+      function ListItemUI(task, taskIdx) {
+        // function for rendering the UI of each task
+        // terniary for striking through completed tasks
+        // concatenating the task value with the buttons
+        return `     
+            <div class='list-item'
+            data-type="${taskIdx}">
+              <p style="display: inline; text-decoration: ${
+                task.completed ? "line-through" : "none"
+              }">${task.value}</p>
+              <span>
+                <button onclick='markCompleted(${taskIdx})'>complete</button>
+                <button onclick='deleteTask(${taskIdx})'>delete</button>
+              </span>
+            </div>
+        `;
+      }
+
+      window.onload = function () {
+        // on page load, get the todos from local storage
+        // or set todos to an empty array
+        todos = JSON.parse(localStorage.getItem("todos")) || [];
+        renderTodos();
+      };
+      function completedTask(taskIdx) {
+        // setting completed to the nth child of the taskIdx array
+        const completed = document.querySelector(
+          // trying to use data attribute instead of selecting the element
+          `.list-item[data-index="${taskIdx}"] > p`
+        );
+        if (completed.style.textDecoration === "line-through") {
+          todos[taskIdx].completed = false;
+        } else {
+          todos[taskIdx].completed = true;
+        }
+        localStorage.setItem("todos", JSON.stringify(todos));
+        renderTodos();
+      }
+      function editTask(taskIdx) {
+        // init task to select .list-item with data-index of taskIdx
+        const task = document.querySelector(
+          `.list-item[data-index="${taskIdx}"]`
+        );
+        // init editButton to select the button with the text "edit"
+        const editButton = document.querySelector(
+          `.list-item[data-index="${taskIdx(2)}"]`
+        );
+        // if the edit button is clicked, change the text to "save"
+        if (editButton.innerText === "edit") {
+          editButton.innerText = "save";
+          //init p to select the p element with the data type of taskIdx
+          const p = document.querySelector(
+            `.list-item[data-index="${taskIdx}"] > p`
+          );
+          // remove p from the DOM
+          p.remove();
+          // init input to create a new input element
+          const input = document.createElement(
+            `.list-item[data-index="${taskIdx}"]`
+          );
+          input.value = todos[taskIdx].value;
+        }
+      }
+
+      function renderTodos() {
+        // set innerText to empty string to clear the list
+        todoList.innerText = "";
+        // for loop to render each task
+        for (let i = 0; i < todos.length; i++) {
+          // add the task to the list
+          todoList.innerHTML += ListItemUI(task, i);
+        }
+      }
+    </script>
+  </body>
+</html>
